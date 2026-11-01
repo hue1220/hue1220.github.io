@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 0 160 180">
+<!-- 뚝딱 AI 공방 여우 -->
+<g transform="translate(0,0) scale(1.0)">
+<path d="M42 78 L26 6 L92 46 Z" fill="#FF8A3D"/><path d="M48 66 L38 24 L78 48 Z" fill="#FFE3CC"/>
+<path d="M158 78 L174 6 L108 46 Z" fill="#FF8A3D"/><path d="M152 66 L162 24 L122 48 Z" fill="#FFE3CC"/>
+<ellipse cx="100" cy="104" rx="76" ry="66" fill="#FF8A3D"/>
+<path d="M30 104 Q52 160 100 172 Q148 160 170 104 Q136 126 100 118 Q64 126 30 104 Z" fill="#fff"/>
+<circle cx="72" cy="98" r="10" fill="#26323D"/><circle cx="128" cy="98" r="10" fill="#26323D"/>
+<circle cx="75" cy="94" r="3.5" fill="#fff"/><circle cx="131" cy="94" r="3.5" fill="#fff"/>
+<ellipse cx="100" cy="124" rx="10" ry="7" fill="#26323D"/>
+<path d="M90 135 Q100 146 110 135" stroke="#26323D" stroke-width="4" fill="none" stroke-linecap="round"/>
+<ellipse cx="56" cy="126" rx="11" ry="6.5" fill="#FF9AA2" opacity=".7"/><ellipse cx="144" cy="126" rx="11" ry="6.5" fill="#FF9AA2" opacity=".7"/>
+</g>
+</svg>

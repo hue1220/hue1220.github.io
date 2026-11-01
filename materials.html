@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수업자료실 · Master Hue의 작업실</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2EC4B6">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="./"><img src="fox.svg" alt=""> Hue's Lab</a>
+</header>
+
+<main>
+  <section class="page-title">
+    <a class="back" href="./">← 처음으로</a>
+    <h1>📚 수업자료실</h1>
+    <p>필요한 자료를 눌러서 내려받으세요.</p>
+  </section>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+</main>
+
+<footer><span>© 2026 Master Hue</span></footer>
+
+<script>
+  /* 자료 목록은 files.json 파일에서 불러옵니다. 자료를 추가할 때는 files.json만 고치면 돼요. */
+  const tabsEl = document.getElementById('tabs');
+  const listEl = document.getElementById('list');
+  let all = [], current = '전체';
+
+  function render() {
+    const items = current === '전체' ? all : all.filter(f => f.group === current);
+    if (!items.length) {
+      listEl.innerHTML = '<p class="empty">아직 올라온 자료가 없어요.</p>';
+      return;
+    }
+    listEl.innerHTML = items.map(f => {
+      const ext = (f.file.split('.').pop() || '').toUpperCase();
+      return `<a class="file" href="${f.file}" download>
+        <span class="type">${ext}</span>
+        <span class="info">
+          <span class="name">${f.title}</span><br>
+          <span class="meta">${f.group}${f.date ? ' · ' + f.date : ''}</span>
+        </span>
+        <span class="dl">받기</span>
+      </a>`;
+    }).join('');
+  }
+
+  function renderTabs() {
+    const groups = ['전체', ...new Set(all.map(f => f.group))];
+    tabsEl.innerHTML = groups.map(g =>
+      `<button class="${g === current ? 'on' : ''}" data-g="${g}">${g}</button>`).join('');
+    tabsEl.querySelectorAll('button').forEach(b => b.onclick = () => {
+      current = b.dataset.g; renderTabs(); render();
+    });
+  }
+
+  fetch('files.json?v=' + Date.now())
+    .then(r => r.json())
+    .then(data => { all = data.slice().reverse(); renderTabs(); render(); })
+    .catch(() => { listEl.innerHTML = '<p class="empty">자료 목록을 불러오지 못했어요.</p>'; });
+</script>
+</body>
+</html>
