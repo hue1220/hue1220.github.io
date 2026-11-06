@@ -23,7 +23,7 @@ button{width:100%;font:700 18px Pretendard;border:0;border-radius:14px;padding:1
 </style></head><body><div class="wrap">
 <a class="back" href="../../english/">← 기초영어반 자료실</a>
 <h1>2차시 복습 테스트</h1><p class="lead">20문항 · 14개 이상이면 통과 · 틀려도 다시 도전할 수 있어요</p>
-<div class="card"><label class="id" for="sid">학번</label><input id="sid" inputmode="numeric" maxlength="5" placeholder="예: 10101"><label class="id" for="sname" style="margin-top:14px">성명</label><input id="sname" maxlength="10" placeholder="예: 홍길동"></div>
+<div class="card"><label class="id" for="sid">학번</label><input id="sid" inputmode="numeric" maxlength="4" placeholder="예: 2103"><label class="id" for="sname" style="margin-top:14px">성명</label><input id="sname" maxlength="10" placeholder="예: 홍길동"></div>
 <div id="qs"></div>
 <button id="sub">채점하기</button>
 <div class="card" id="res"></div>
@@ -37,7 +37,7 @@ Q.forEach((q,i)=>{const d=document.createElement('div');d.className='card';d.id=
  `<div class="fb">정답 (${L[q.a]}) ${q.o[q.a]} · 복습 노트 <b>${q.t}</b> 다시 보기</div>`;qs.appendChild(d);});
 document.getElementById('sub').onclick=()=>{
  const sid=document.getElementById('sid').value.trim();
- if(!/^\d{5}$/.test(sid)){alert('학번 5자리를 먼저 입력하세요');document.getElementById('sid').focus();return;}
+ if(!/^\d{4}$/.test(sid)){alert('학번 4자리를 먼저 입력하세요');document.getElementById('sid').focus();return;}
  const nm=document.getElementById('sname').value.trim();
  if(!nm){alert('성명을 입력하세요');document.getElementById('sname').focus();return;}
  const miss=Q.findIndex((q,i)=>!document.querySelector(`input[name=q${i}]:checked`));
