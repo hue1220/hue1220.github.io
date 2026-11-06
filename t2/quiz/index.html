@@ -7,7 +7,7 @@
 .back{font-size:14px;color:#6B7280;text-decoration:none}
 h1{font-size:24px;margin:10px 0 4px}.lead{color:#6B7280;margin:0 0 18px;font-size:15px}
 .card{background:#fff;border:1px solid #E3E6EC;border-radius:18px;padding:18px;margin-bottom:14px}
-label.id{display:block;font-weight:700;margin-bottom:8px}input#sid{width:100%;font-size:18px;padding:12px 14px;border:2px solid #E3E6EC;border-radius:12px}
+label.id{display:block;font-weight:700;margin-bottom:8px}input#sid,input#sname{width:100%;font-size:18px;padding:12px 14px;border:2px solid #E3E6EC;border-radius:12px}
 .qn{display:inline-block;background:#3D5A80;color:#fff;border-radius:999px;padding:2px 11px;font-weight:700;font-size:14px;margin-bottom:8px}
 .qt{font-size:18px;font-weight:600;line-height:1.5;margin-bottom:10px}
 .op{display:flex;gap:10px;align-items:center;border:2px solid #E3E6EC;border-radius:12px;padding:11px 13px;margin-top:8px;font-size:17px;cursor:pointer}
@@ -23,7 +23,7 @@ button{width:100%;font:700 18px Pretendard;border:0;border-radius:14px;padding:1
 </style></head><body><div class="wrap">
 <a class="back" href="../../english/">← 기초영어반 자료실</a>
 <h1>2차시 복습 테스트</h1><p class="lead">20문항 · 14개 이상이면 통과 · 틀려도 다시 도전할 수 있어요</p>
-<div class="card"><label class="id" for="sid">학번</label><input id="sid" inputmode="numeric" maxlength="5" placeholder="예: 10101"></div>
+<div class="card"><label class="id" for="sid">학번</label><input id="sid" inputmode="numeric" maxlength="5" placeholder="예: 10101"><label class="id" for="sname" style="margin-top:14px">성명</label><input id="sname" maxlength="10" placeholder="예: 홍길동"></div>
 <div id="qs"></div>
 <button id="sub">채점하기</button>
 <div class="card" id="res"></div>
@@ -38,6 +38,8 @@ Q.forEach((q,i)=>{const d=document.createElement('div');d.className='card';d.id=
 document.getElementById('sub').onclick=()=>{
  const sid=document.getElementById('sid').value.trim();
  if(!/^\d{5}$/.test(sid)){alert('학번 5자리를 먼저 입력하세요');document.getElementById('sid').focus();return;}
+ const nm=document.getElementById('sname').value.trim();
+ if(!nm){alert('성명을 입력하세요');document.getElementById('sname').focus();return;}
  const miss=Q.findIndex((q,i)=>!document.querySelector(`input[name=q${i}]:checked`));
  if(miss>=0){alert((miss+1)+'번을 아직 안 풀었어요');document.getElementById('c'+miss).scrollIntoView({behavior:'smooth',block:'center'});return;}
  let s=0;const wrong=[];
@@ -47,7 +49,7 @@ document.getElementById('sub').onclick=()=>{
  document.body.classList.add('done');document.getElementById('sub').style.display='none';
  const ok=s>=14,now=new Date();
  const r=document.getElementById('res');r.classList.add('on');
- r.innerHTML=`<div class="meta">학번 ${sid} · ${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div>
+ r.innerHTML=`<div class="meta">학번 ${sid} · ${nm} · ${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div>
   <div class="big ${ok?'pass':'fail'}">${s} / 20</div><div style="font-size:22px;font-weight:800" class="${ok?'pass':'fail'}">${ok?'통과! 🎉':'아쉬워요 — 복습 노트 보고 다시 도전'}</div>
   ${wrong.length?`<p>틀린 문제: ${wrong.join(', ')}번 (아래에서 정답 확인)</p>`:'<p>만점이에요!</p>'}
   <p class="note">이 화면을 캡처해서 선생님께 보여 주세요.</p><button class="again" onclick="location.reload()">다시 풀기</button>`;
