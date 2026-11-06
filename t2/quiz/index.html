@@ -1,0 +1,56 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>기초영어반 2차시 복습 테스트</title><meta name="theme-color" content="#3D5A80">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F7FA;color:#1E2433;font-family:Pretendard,'Malgun Gothic',sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+.back{font-size:14px;color:#6B7280;text-decoration:none}
+h1{font-size:24px;margin:10px 0 4px}.lead{color:#6B7280;margin:0 0 18px;font-size:15px}
+.card{background:#fff;border:1px solid #E3E6EC;border-radius:18px;padding:18px;margin-bottom:14px}
+label.id{display:block;font-weight:700;margin-bottom:8px}input#sid{width:100%;font-size:18px;padding:12px 14px;border:2px solid #E3E6EC;border-radius:12px}
+.qn{display:inline-block;background:#3D5A80;color:#fff;border-radius:999px;padding:2px 11px;font-weight:700;font-size:14px;margin-bottom:8px}
+.qt{font-size:18px;font-weight:600;line-height:1.5;margin-bottom:10px}
+.op{display:flex;gap:10px;align-items:center;border:2px solid #E3E6EC;border-radius:12px;padding:11px 13px;margin-top:8px;font-size:17px;cursor:pointer}
+.op input{width:20px;height:20px;accent-color:#3D5A80}.op b{color:#3D5A80;min-width:28px}
+.op:has(input:checked){border-color:#3D5A80;background:#EEF2F8}
+.done .op{pointer-events:none}.done .op.ok{border-color:#1F9D6B;background:#E6F6EF}.done .op.bad{border-color:#D9534F;background:#FDECEC}
+.fb{display:none;margin-top:10px;font-size:15px;color:#a33}.done .card.wrong .fb{display:block}
+button{width:100%;font:700 18px Pretendard;border:0;border-radius:14px;padding:15px;background:#3D5A80;color:#fff;cursor:pointer}
+#res{display:none;text-align:center}#res.on{display:block}
+#res .big{font-size:56px;font-weight:800;margin:6px 0}#res .pass{color:#1F9D6B}#res .fail{color:#D9534F}
+#res .meta{color:#6B7280;font-size:15px}.again{background:#fff;color:#3D5A80;border:2px solid #3D5A80;margin-top:12px}
+.note{font-size:14px;color:#6B7280;margin-top:10px}
+</style></head><body><div class="wrap">
+<a class="back" href="../../english/">← 기초영어반 자료실</a>
+<h1>2차시 복습 테스트</h1><p class="lead">20문항 · 14개 이상이면 통과 · 틀려도 다시 도전할 수 있어요</p>
+<div class="card"><label class="id" for="sid">학번</label><input id="sid" inputmode="numeric" maxlength="5" placeholder="예: 10101"></div>
+<div id="qs"></div>
+<button id="sub">채점하기</button>
+<div class="card" id="res"></div>
+</div>
+<script>
+const Q=[{"q": "Mr. Cho has a deep ______ of robots.", "o": ["know", "known", "knowledge", "knowledgeable"], "a": 2, "t": "꿀팁 01"}, {"q": "The new parking lot is ______ to all visitors.", "o": ["access", "accessible", "accessibly", "accessibility"], "a": 1, "t": "꿀팁 01"}, {"q": "The team has ______ finished the report.", "o": ["final", "finalize", "finality", "finally"], "a": 3, "t": "꿀팁 01"}, {"q": "The students were ______ after the long test.", "o": ["tire", "tiring", "tired", "tiredness"], "a": 2, "t": "꿀팁 02"}, {"q": "Since 2023, our company ______ two new stores.", "o": ["opens", "has opened", "will open", "opening"], "a": 1, "t": "꿀팁 03"}, {"q": "The packages ______ next Monday.", "o": ["deliver", "are delivering", "have delivered", "will be delivered"], "a": 3, "t": "꿀팁 04"}, {"q": "The box of tools ______ very heavy.", "o": ["is", "are", "being", "to be"], "a": 0, "t": "꿀팁 05"}, {"q": "Please ______ this form before the class.", "o": ["fill", "complete", "arrive", "agree"], "a": 1, "t": "꿀팁 06"}, {"q": "You can ______ an order on our Web site.", "o": ["place", "bring", "raise", "hold"], "a": 0, "t": "꿀팁 06"}, {"q": "The trip will take ______ three hours.", "o": ["recently", "shortly", "highly", "approximately"], "a": 3, "t": "꿀팁 07"}, {"q": "______ the cold weather, the game started on time.", "o": ["Although", "Despite", "Because", "Unless"], "a": 1, "t": "꿀팁 08"}, {"q": "The train was late ______ the heavy snow.", "o": ["because", "because of", "so that", "even if"], "a": 1, "t": "꿀팁 08"}, {"q": "I decided to walk ______ take a taxi.", "o": ["rather than", "instead of", "in case", "as long as"], "a": 0, "t": "꿀팁 08"}, {"q": "She painted the room ______.", "o": ["her", "hers", "she", "herself"], "a": 3, "t": "꿀팁 09"}, {"q": "This laptop is ______ faster than my old one.", "o": ["very", "many", "much", "most"], "a": 2, "t": "꿀팁 07"}, {"q": "It is important that every worker ______ a helmet.", "o": ["wear", "wears", "wearing", "to wear"], "a": 0, "t": "꿀팁 10"}, {"q": "'submit'의 뜻은?", "o": ["줄이다", "참석하다", "제출하다", "연장하다"], "a": 2, "t": "단어"}, {"q": "'temporary'의 뜻은?", "o": ["영구적인", "일시적인", "유용한", "꼭 필요한"], "a": 1, "t": "단어"}, {"q": "'out of stock'의 뜻은?", "o": ["품절된", "공사 중인", "이용 가능한", "호환되는"], "a": 0, "t": "단어"}, {"q": "\"I cannot stand long lines.\"에서 stand의 뜻은?", "o": ["서다", "놓다", "참다", "남다"], "a": 2, "t": "단어"}];const L='ABCD';
+const qs=document.getElementById('qs');
+Q.forEach((q,i)=>{const d=document.createElement('div');d.className='card';d.id='c'+i;
+ d.innerHTML=`<span class="qn">${i+1}</span><div class="qt">${q.q.replace('______','<u>　　　　</u>')}</div>`+
+ q.o.map((o,j)=>`<label class="op" id="o${i}_${j}"><input type="radio" name="q${i}" value="${j}"><b>(${L[j]})</b>${o}</label>`).join('')+
+ `<div class="fb">정답 (${L[q.a]}) ${q.o[q.a]} · 복습 노트 <b>${q.t}</b> 다시 보기</div>`;qs.appendChild(d);});
+document.getElementById('sub').onclick=()=>{
+ const sid=document.getElementById('sid').value.trim();
+ if(!/^\d{5}$/.test(sid)){alert('학번 5자리를 먼저 입력하세요');document.getElementById('sid').focus();return;}
+ const miss=Q.findIndex((q,i)=>!document.querySelector(`input[name=q${i}]:checked`));
+ if(miss>=0){alert((miss+1)+'번을 아직 안 풀었어요');document.getElementById('c'+miss).scrollIntoView({behavior:'smooth',block:'center'});return;}
+ let s=0;const wrong=[];
+ Q.forEach((q,i)=>{const v=+document.querySelector(`input[name=q${i}]:checked`).value;const c=document.getElementById('c'+i);
+  document.getElementById(`o${i}_${q.a}`).classList.add('ok');
+  if(v===q.a)s++;else{wrong.push(i+1);c.classList.add('wrong');document.getElementById(`o${i}_${v}`).classList.add('bad');}});
+ document.body.classList.add('done');document.getElementById('sub').style.display='none';
+ const ok=s>=14,now=new Date();
+ const r=document.getElementById('res');r.classList.add('on');
+ r.innerHTML=`<div class="meta">학번 ${sid} · ${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div>
+  <div class="big ${ok?'pass':'fail'}">${s} / 20</div><div style="font-size:22px;font-weight:800" class="${ok?'pass':'fail'}">${ok?'통과! 🎉':'아쉬워요 — 복습 노트 보고 다시 도전'}</div>
+  ${wrong.length?`<p>틀린 문제: ${wrong.join(', ')}번 (아래에서 정답 확인)</p>`:'<p>만점이에요!</p>'}
+  <p class="note">이 화면을 캡처해서 선생님께 보여 주세요.</p><button class="again" onclick="location.reload()">다시 풀기</button>`;
+ r.scrollIntoView({behavior:'smooth'});
+};
+</script></body></html>
