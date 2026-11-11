@@ -2,7 +2,7 @@
    비밀번호를 바꾸려면 아래 HASH 값을 새 비밀번호의 SHA-256 값으로 바꿉니다. */
 (function () {
   var HASH = window.GATE_HASH || '164ac2402a315348ddab8fb794bcb2a0a9adcae53fb9a70ee15ae6a224acbaa6';
-  var HINT = window.GATE_HINT || '수업 시간에 알려 드린 숫자예요';
+  var HINT = window.GATE_HINT || '힌트: 홍홍';
   var root = document.documentElement;
   root.classList.add('gate-locked');
 
