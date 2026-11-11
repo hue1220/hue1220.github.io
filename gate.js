@@ -20,7 +20,9 @@
     '.gate-box input.shake{animation:gate-shake .35s;border-color:#ff6b6b}' +
     '@keyframes gate-shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}' +
     '.gate-box button{margin-top:12px;width:100%;font:inherit;font-size:16px;font-weight:700;padding:13px;border:0;border-radius:14px;background:#2EC4B6;color:#fff;cursor:pointer}' +
-    '.gate-msg{min-height:20px;font-size:13px;color:#e03e3e;margin-top:10px}';
+    '.gate-msg{min-height:20px;font-size:13px;color:#e03e3e;margin-top:10px}' +
+    '.gate-back{display:inline-block;margin-top:18px;font-size:15px;font-weight:600;color:#6b7a83;text-decoration:none;padding:8px 14px}' +
+    '.gate-back:hover{color:#2EC4B6}';
   document.head.appendChild(css);
 
   function sha256(text) {
@@ -39,7 +41,8 @@
       '<circle cx="32" cy="42" r="4" fill="#2EC4B6"/><path d="M32 45v6" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"/></svg>' +
       '<h2>비밀번호를 입력하세요</h2><p>' + HINT + '</p>' +
       '<input type="password" inputmode="numeric" autocomplete="off" maxlength="12" aria-label="비밀번호">' +
-      '<button type="submit">들어가기</button><div class="gate-msg"></div></form>';
+      '<button type="submit">들어가기</button><div class="gate-msg"></div>' +
+      '<a class="gate-back" href="/">← 처음 화면으로 돌아가기</a></form>';
     document.body.appendChild(g);
     var input = g.querySelector('input'), msg = g.querySelector('.gate-msg');
     g.querySelector('form').addEventListener('submit', function (e) {
