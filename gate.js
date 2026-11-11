@@ -1,7 +1,8 @@
 /* 화면 비밀번호 잠금 — <head> 안에 <script src="gate.js"></script> 로 넣습니다.
    비밀번호를 바꾸려면 아래 HASH 값을 새 비밀번호의 SHA-256 값으로 바꿉니다. */
 (function () {
-  var HASH = '164ac2402a315348ddab8fb794bcb2a0a9adcae53fb9a70ee15ae6a224acbaa6';
+  var HASH = window.GATE_HASH || '164ac2402a315348ddab8fb794bcb2a0a9adcae53fb9a70ee15ae6a224acbaa6';
+  var HINT = window.GATE_HINT || '수업 시간에 알려 드린 숫자예요';
   var root = document.documentElement;
   root.classList.add('gate-locked');
 
@@ -36,7 +37,7 @@
       '<svg viewBox="0 0 64 64" fill="none"><rect x="12" y="28" width="40" height="30" rx="8" fill="#e2f7f5"/>' +
       '<path d="M20 28v-7a12 12 0 0 1 24 0v7" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"/>' +
       '<circle cx="32" cy="42" r="4" fill="#2EC4B6"/><path d="M32 45v6" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"/></svg>' +
-      '<h2>비밀번호를 입력하세요</h2><p>수업 시간에 알려 드린 숫자예요</p>' +
+      '<h2>비밀번호를 입력하세요</h2><p>' + HINT + '</p>' +
       '<input type="password" inputmode="numeric" autocomplete="off" maxlength="12" aria-label="비밀번호">' +
       '<button type="submit">들어가기</button><div class="gate-msg"></div></form>';
     document.body.appendChild(g);

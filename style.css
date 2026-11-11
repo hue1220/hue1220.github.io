@@ -37,7 +37,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 20px; }
 /* 카드 */
 .cards {
   display: grid; gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 .card {
   display: block; padding: 22px 20px; border: 1.5px solid var(--line);
