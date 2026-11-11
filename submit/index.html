@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과제 제출함 · Master Hue의 작업실</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#2EC4B6">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../style.css?v=3">
+<script src="../gate.js?v=2"></script>
+<style>
+  .box { border: 1.5px solid var(--line); border-radius: 18px; padding: 20px; margin-bottom: 18px; }
+  .box h2 { font-size: 18px; margin-bottom: 14px; }
+  label { display: block; font-size: 14px; font-weight: 700; margin: 14px 0 6px; }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], input[type=datetime-local], select {
+    width: 100%; font: inherit; font-size: 15px; border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 11px 12px; outline: none; background: #fff; color: var(--text);
+  }
+  input:focus, select:focus { border-color: var(--point); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .drop { border: 2px dashed var(--line); border-radius: 14px; padding: 22px; text-align: center; color: var(--sub); cursor: pointer; font-size: 14px; }
+  .drop:hover, .drop.over { border-color: var(--point); color: var(--point); }
+  .drop b { color: var(--text); }
+  .deadline { font-size: 13px; color: var(--sub); margin-top: 6px; min-height: 18px; }
+  .deadline.late { color: #e8590c; font-weight: 700; }
+  .btn { border: 0; background: var(--point); color: #fff; font: inherit; font-weight: 700; padding: 13px 22px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 18px; font-size: 16px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn.sub { background: #fff; color: var(--point); border: 1.5px solid var(--point); width: auto; padding: 9px 16px; font-size: 14px; margin-top: 0; }
+  .msg { font-size: 14px; margin-top: 10px; min-height: 20px; color: #e03131; }
+  .bar { height: 10px; background: #eef3f4; border-radius: 99px; overflow: hidden; margin-top: 14px; display: none; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--point); transition: width .3s; }
+  .receipt { text-align: center; padding: 30px 20px; }
+  .receipt .big { font-size: 46px; }
+  .receipt h2 { font-size: 22px; margin: 6px 0 16px; }
+  .receipt table { margin: 0 auto; text-align: left; font-size: 15px; border-collapse: collapse; }
+  .receipt td { padding: 5px 10px; } .receipt td:first-child { color: var(--sub); }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: #e2f7f5; color: var(--point); }
+  .tag.late { background: #fff0e6; color: #e8590c; }
+  .tag.off { background: #f1f3f5; color: #868e96; }
+  .note { font-size: 13px; color: var(--sub); margin-top: 12px; }
+  /* 관리 */
+  .admin { display: none; }
+  .admin.on { display: block; }
+  .asg { border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .asg-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .asg-head b { font-size: 16px; }
+  .asg-meta { font-size: 13px; color: var(--sub); margin-top: 4px; }
+  .asg-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .asg-acts button { border: 1.5px solid var(--line); background: #fff; font: inherit; font-size: 13px; font-weight: 600; color: var(--sub); padding: 5px 12px; border-radius: 99px; cursor: pointer; }
+  .asg-acts button:hover { border-color: var(--point); color: var(--point); }
+  .subs { margin-top: 10px; overflow-x: auto; }
+  .subs table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .subs th, .subs td { border-bottom: 1px solid var(--line); padding: 7px 6px; text-align: left; white-space: nowrap; }
+  .subs a { color: var(--point); font-weight: 700; }
+  .teacher-link { background: none; border: 0; font: inherit; font-size: 13px; color: var(--sub); cursor: pointer; }
+  .teacher-link:hover { color: var(--point); }
+  .admin-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="../"><img src="../fox.svg" alt=""> Hue's Lab</a>
+</header>
+
+<main>
+  <section class="page-title">
+    <a class="back" href="../">← 처음으로</a>
+    <h1>📤 과제 제출함</h1>
+    <p>과제를 고르고 PPT·PDF 파일을 내 주세요.</p>
+  </section>
+
+  <!-- 학생 제출 -->
+  <section id="student">
+    <div class="box" id="form">
+      <label for="asg">과제</label>
+      <select id="asg"><option value="">과제 목록을 불러오는 중…</option></select>
+      <div class="deadline" id="dl"></div>
+
+      <div class="row2">
+        <div><label for="sid">학번</label><input type="text" id="sid" inputmode="numeric" maxlength="5" placeholder="예: 1201" autocomplete="off"></div>
+        <div><label for="sname">이름</label><input type="text" id="sname" maxlength="10" placeholder="예: 홍길동" autocomplete="off"></div>
+      </div>
+
+      <label>파일 (PPT·PDF, 30MB까지)</label>
+      <div class="drop" id="drop">여기를 눌러 파일을 고르거나 끌어다 놓으세요</div>
+      <input type="file" id="file" accept=".ppt,.pptx,.pdf" hidden>
+
+      <button class="btn" id="sendBtn">제출하기</button>
+      <div class="bar" id="bar"><i></i></div>
+      <div class="msg" id="msg"></div>
+      <p class="note">· 마감 전에는 다시 낼 수 있어요. 마지막에 낸 파일이 최종본이에요.<br>· 마감이 지나도 낼 수 있지만 '지각'으로 기록돼요.</p>
+    </div>
+
+    <div class="box receipt" id="receipt" hidden>
+      <div class="big">✅</div>
+      <h2>제출 완료!</h2>
+      <table id="rcpt"></table>
+      <p class="note">이 화면을 캡처해 두면 제출 증빙이 돼요.</p>
+      <button class="btn sub" id="againBtn" style="margin-top:16px">다른 과제 내기</button>
+    </div>
+  </section>
+
+  <!-- 선생님 관리 -->
+  <section class="admin" id="admin">
+    <div class="admin-top">
+      <h2 style="font-size:20px">👩‍🏫 선생님 관리</h2>
+      <button class="teacher-link" id="exitAdmin">관리 끝내기</button>
+    </div>
+    <div class="box">
+      <h2>새 과제 만들기</h2>
+      <label for="nTitle">과제명</label>
+      <input type="text" id="nTitle" maxlength="40" placeholder="예: 2학기 주제탐구발표">
+      <label for="nDl">제출 마감</label>
+      <input type="datetime-local" id="nDl">
+      <button class="btn" id="createBtn">과제 등록</button>
+      <div class="msg" id="aMsg"></div>
+    </div>
+    <div id="asgList"></div>
+  </section>
+</main>
+
+<footer>
+  <a href="../">Master Hue의 작업실</a>
+  <span>·</span>
+  <button class="teacher-link" id="teacherBtn">선생님</button>
+</footer>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxp4fenNp0kPPnTkiWUfzurNfIZ-vNfwmpBcHLYk5GLrPexfXV7h-k2Ey1oTGGLTAo59w/exec';   // 구글 앱스 스크립트 웹 앱 주소
+const MAX = 30 * 1024 * 1024;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }, del(k) { try { sessionStorage.removeItem(k); } catch (e) {} } };
+const ls = { get(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+async function call(body) {
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  return r.json();
+}
+const W = ['일', '월', '화', '수', '목', '금', '토'];
+function kdate(ms) {
+  const d = new Date(ms);
+  const h = d.getHours(), m = String(d.getMinutes()).padStart(2, '0');
+  return (d.getMonth() + 1) + '월 ' + d.getDate() + '일(' + W[d.getDay()] + ') ' + (h < 12 ? '오전 ' : '오후 ') + ((h % 12) || 12) + ':' + m;
+}
+
+/* ---------- 학생 ---------- */
+let list = [], picked = null;
+$('sid').value = ls.get('sub_sid'); $('sname').value = ls.get('sub_name');
+
+async function loadList() {
+  try {
+    const r = await call({ action: 'list' });
+    list = (r.list || []).sort((a, b) => a.deadline - b.deadline);
+    $('asg').innerHTML = list.length
+      ? '<option value="">과제를 골라 주세요</option>' + list.map(a => `<option value="${esc(a.id)}">${esc(a.title)}</option>`).join('')
+      : '<option value="">지금 낼 수 있는 과제가 없어요</option>';
+  } catch (e) {
+    $('asg').innerHTML = '<option value="">과제 목록을 불러오지 못했어요. 새로고침해 주세요.</option>';
+  }
+  showDl();
+}
+function showDl() {
+  const a = list.find(x => x.id === $('asg').value);
+  const el = $('dl');
+  if (!a) { el.textContent = ''; el.className = 'deadline'; return; }
+  const late = Date.now() > a.deadline;
+  el.textContent = late ? '⏰ 마감(' + kdate(a.deadline) + ')이 지났어요. 지금 내면 지각으로 접수돼요.' : '마감: ' + kdate(a.deadline);
+  el.className = 'deadline' + (late ? ' late' : '');
+}
+$('asg').onchange = showDl;
+
+function pick(f) {
+  if (!f) return;
+  const ext = f.name.split('.').pop().toLowerCase();
+  if (!['ppt', 'pptx', 'pdf'].includes(ext)) { picked = null; $('drop').textContent = 'PPT 또는 PDF 파일만 낼 수 있어요.'; return; }
+  if (f.size > MAX) { picked = null; $('drop').textContent = '파일이 30MB보다 커요. 그림 크기를 줄여서 다시 저장해 주세요.'; return; }
+  picked = f;
+  $('drop').innerHTML = '📎 <b>' + esc(f.name) + '</b> (' + (f.size / 1024 / 1024).toFixed(1) + 'MB) — 바꾸려면 다시 누르세요';
+}
+$('drop').onclick = () => $('file').click();
+$('file').onchange = e => pick(e.target.files[0]);
+['dragover', 'dragenter'].forEach(t => $('drop').addEventListener(t, e => { e.preventDefault(); $('drop').classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => $('drop').addEventListener(t, e => { e.preventDefault(); $('drop').classList.remove('over'); }));
+$('drop').addEventListener('drop', e => pick(e.dataTransfer.files[0]));
+
+function toB64(file) {
+  return new Promise((ok, no) => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(',')[1]);
+    r.onerror = no;
+    r.readAsDataURL(file);
+  });
+}
+let timer;
+function progress(on) {
+  const bar = $('bar'), i = bar.querySelector('i');
+  clearInterval(timer);
+  if (!on) { i.style.width = '100%'; setTimeout(() => { bar.style.display = 'none'; i.style.width = '0'; }, 400); return; }
+  bar.style.display = 'block'; let w = 5; i.style.width = w + '%';
+  timer = setInterval(() => { w = Math.min(92, w + (92 - w) * 0.06); i.style.width = w + '%'; }, 400);
+}
+
+$('sendBtn').onclick = async () => {
+  const msg = $('msg'); msg.textContent = '';
+  const aid = $('asg').value, sid = $('sid').value.trim(), name = $('sname').value.trim();
+  if (!aid) return msg.textContent = '과제를 골라 주세요.';
+  if (!/^\d{4,5}$/.test(sid)) return msg.textContent = '학번을 숫자 4~5자리로 써 주세요.';
+  if (name.length < 2) return msg.textContent = '이름을 써 주세요.';
+  if (!picked) return msg.textContent = '낼 파일을 골라 주세요.';
+  $('sendBtn').disabled = true; $('sendBtn').textContent = '보내는 중… 창을 닫지 마세요';
+  progress(true);
+  try {
+    const data = await toB64(picked);
+    const r = await call({ action: 'submit', aid, sid, name, fileName: picked.name, mime: picked.type, data });
+    progress(false);
+    if (!r.ok) { msg.textContent = r.msg || '제출하지 못했어요.'; }
+    else {
+      ls.set('sub_sid', sid); ls.set('sub_name', name);
+      $('rcpt').innerHTML =
+        `<tr><td>과제</td><td><b>${esc(r.title)}</b></td></tr>` +
+        `<tr><td>학번·이름</td><td>${esc(r.sid)} ${esc(r.name)}</td></tr>` +
+        `<tr><td>제출 시각</td><td>${kdate(r.time)}</td></tr>` +
+        `<tr><td>상태</td><td><span class="tag${r.late ? ' late' : ''}">${r.late ? '지각' : '정시'}</span>${r.n > 1 ? ' ' + r.n + '차 제출' : ''}</td></tr>` +
+        `<tr><td>파일</td><td>${esc(picked.name)}</td></tr>`;
+      $('form').hidden = true; $('receipt').hidden = false;
+      picked = null; $('file').value = ''; $('drop').textContent = '여기를 눌러 파일을 고르거나 끌어다 놓으세요';
+    }
+  } catch (e) {
+    progress(false);
+    msg.textContent = '보내지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.';
+  }
+  $('sendBtn').disabled = false; $('sendBtn').textContent = '제출하기';
+};
+$('againBtn').onclick = () => { $('receipt').hidden = true; $('form').hidden = false; loadList(); };
+
+/* ---------- 선생님 ---------- */
+let pw = ss.get('sub_pw');
+function toLocalInput(ms) { const d = new Date(ms - new Date(ms).getTimezoneOffset() * 60000); return d.toISOString().slice(0, 16); }
+
+async function openAdmin() {
+  if (!pw) { pw = prompt('선생님 관리 비밀번호를 입력하세요'); if (!pw) return; }
+  const r = await call({ action: 'adminList', pw }).catch(() => ({ ok: false, msg: '서버에 연결하지 못했어요.' }));
+  if (!r.ok) { alert(r.msg); if (r.auth === false) { pw = null; ss.del('sub_pw'); } return; }
+  ss.set('sub_pw', pw);
+  $('student').style.display = 'none'; $('admin').classList.add('on');
+  $('teacherBtn').textContent = '관리 중';
+  renderAdmin(r.list, r.now);
+}
+function renderAdmin(items, now) {
+  items.sort((a, b) => (b.open - a.open) || (b.deadline - a.deadline));
+  $('asgList').innerHTML = items.length ? items.map(a => {
+    const over = now > a.deadline;
+    return `<div class="asg" data-id="${esc(a.id)}">
+      <div class="asg-head"><b>${esc(a.title)}</b>
+        ${a.open ? (over ? '<span class="tag late">마감 지남</span>' : '<span class="tag">진행 중</span>') : '<span class="tag off">숨김</span>'}</div>
+      <div class="asg-meta">마감 ${kdate(a.deadline)} · 제출 ${a.count}명${a.late ? ' (지각 ' + a.late + '명)' : ''} · 파일 ${a.files}개</div>
+      <div class="asg-acts">
+        <button data-a="subs">제출 현황</button>
+        <button data-a="dl">마감 바꾸기</button>
+        <button data-a="rename">이름 바꾸기</button>
+        <button data-a="toggle">${a.open ? '학생에게 숨기기' : '다시 열기'}</button>
+      </div>
+      <div class="subs" hidden></div>
+    </div>`;
+  }).join('') : '<p class="empty">아직 만든 과제가 없어요.</p>';
+}
+async function refreshAdmin() {
+  const r = await call({ action: 'adminList', pw });
+  if (r.ok) renderAdmin(r.list, r.now); else alert(r.msg);
+}
+
+$('teacherBtn').onclick = openAdmin;
+$('exitAdmin').onclick = () => {
+  pw = null; ss.del('sub_pw');
+  $('admin').classList.remove('on'); $('student').style.display = '';
+  $('teacherBtn').textContent = '선생님'; loadList();
+};
+
+$('createBtn').onclick = async () => {
+  const title = $('nTitle').value.trim(), v = $('nDl').value;
+  if (!title) return $('aMsg').textContent = '과제명을 써 주세요.';
+  if (!v) return $('aMsg').textContent = '마감 날짜와 시각을 정해 주세요.';
+  $('createBtn').disabled = true; $('aMsg').textContent = '';
+  const r = await call({ action: 'create', pw, title, deadline: new Date(v).getTime() }).catch(() => ({ ok: false, msg: '서버에 연결하지 못했어요.' }));
+  $('createBtn').disabled = false;
+  if (!r.ok) return $('aMsg').textContent = r.msg;
+  $('nTitle').value = ''; $('nDl').value = '';
+  refreshAdmin();
+};
+
+$('asgList').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-a]'); if (!b) return;
+  const box = b.closest('.asg'), id = box.dataset.id, a = b.dataset.a;
+  try {
+    if (a === 'subs') {
+      const el = box.querySelector('.subs');
+      if (!el.hidden) { el.hidden = true; return; }
+      el.hidden = false; el.innerHTML = '<p class="note">불러오는 중…</p>';
+      const r = await call({ action: 'submissions', pw, id });
+      if (!r.ok) { el.innerHTML = '<p class="note">' + esc(r.msg) + '</p>'; return; }
+      el.innerHTML = r.rows.length ? '<table><tr><th>학번</th><th>이름</th><th>제출 시각</th><th>상태</th><th>차수</th><th>파일</th></tr>' +
+        r.rows.sort((x, y) => x.sid.localeCompare(y.sid) || x.n - y.n).map(s =>
+          `<tr><td>${esc(s.sid)}</td><td>${esc(s.name)}</td><td>${esc(s.time)}</td><td><span class="tag${s.late ? ' late' : ''}">${s.late ? '지각' : '정시'}</span></td><td>${s.n}</td><td><a href="${esc(s.url)}" target="_blank" rel="noopener">열기</a></td></tr>`).join('') +
+        '</table>' : '<p class="note">아직 제출한 학생이 없어요.</p>';
+    } else if (a === 'dl') {
+      const v = prompt('새 마감을 입력하세요 (예: 2026-11-28 17:00)', '');
+      if (!v) return;
+      const t = new Date(v.replace(' ', 'T')).getTime();
+      if (!t) return alert('날짜 모양이 맞지 않아요. 예: 2026-11-28 17:00');
+      const r = await call({ action: 'update', pw, id, deadline: t }); if (!r.ok) alert(r.msg); refreshAdmin();
+    } else if (a === 'rename') {
+      const v = prompt('새 과제명을 입력하세요'); if (!v || !v.trim()) return;
+      const r = await call({ action: 'update', pw, id, title: v.trim() }); if (!r.ok) alert(r.msg); refreshAdmin();
+    } else if (a === 'toggle') {
+      const open = b.textContent === '다시 열기';
+      const r = await call({ action: 'update', pw, id, open }); if (!r.ok) alert(r.msg); refreshAdmin();
+    }
+  } catch (err) { alert('서버에 연결하지 못했어요.'); }
+});
+
+loadList();
+if (pw) openAdmin();
+</script>
+</body>
+</html>
