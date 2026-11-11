@@ -75,6 +75,7 @@
       <li>친구 이름을 들어 놀리거나 흉보는 글은 쓰지 않아요.</li>
       <li>전화번호·주소 같은 개인정보는 올리지 않아요.</li>
       <li>약속을 지키지 않은 글은 선생님이 지워요. 불편한 글은 <b>신고</b>를 눌러 주세요.</li>
+      <li>내가 쓴 글은 <b>글을 쓴 기기</b>에서 <b>내 글 삭제</b>로 지울 수 있어요.</li>
     </ul>
   </div>
 
@@ -188,8 +189,10 @@ $('sendBtn').onclick = async () => {
   const wait = WAIT_SEC - Math.floor((Date.now() - last) / 1000);
   if (!isAdmin && wait > 0) return say(wait + '초 뒤에 다시 올릴 수 있어요.');
 
+  const u = auth.currentUser;
+  if (!u) { auth.signInAnonymously().catch(() => {}); return say('잠시 뒤에 다시 눌러 주세요.'); }
   const masked = maskPhone(text);
-  const post = { name, text: masked, ts: firebase.database.ServerValue.TIMESTAMP };
+  const post = { name, text: masked, uid: u.uid, ts: firebase.database.ServerValue.TIMESTAMP };
   if (isAdmin) post.teacher = true;
   $('sendBtn').disabled = true;
   try {
@@ -227,8 +230,10 @@ function render() {
         '<button data-a="pin" data-id="' + p.id + '">' + (p.pinned ? '고정 해제' : '맨 위 고정') + '</button>' +
         (rc ? '<button data-a="clear" data-id="' + p.id + '">신고 초기화</button>' : '') +
         '<button class="danger" data-a="del" data-id="' + p.id + '">삭제</button>';
-    } else if (!hidden && !p.teacher && !myReports.has(p.id)) {
-      acts = '<button data-a="report" data-id="' + p.id + '">🚩 신고</button>';
+    } else {
+      const mine = auth.currentUser && p.uid === auth.currentUser.uid;
+      if (mine) acts = '<button class="danger" data-a="mydel" data-id="' + p.id + '">내 글 삭제</button>';
+      else if (!hidden && !p.teacher && !myReports.has(p.id)) acts = '<button data-a="report" data-id="' + p.id + '">🚩 신고</button>';
     }
     return '<article class="' + cls + '"><div class="post-head">' +
       '<span class="who">' + esc(p.name) + '</span>' +
@@ -253,6 +258,10 @@ $('list').addEventListener('click', async e => {
       if (!confirm('이 글을 신고할까요? 신고가 ' + REPORT_LIMIT + '번 쌓이면 글이 숨겨져요.')) return;
       await reportsRef.child(id).child(myId).set(true);
       myReports.add(id); store.set('board_reported', [...myReports]); render();
+    } else if (a === 'mydel') {
+      if (!confirm('내 글을 지울까요? 지운 글은 되살릴 수 없어요.')) return;
+      await postsRef.child(id).remove();
+      reportsRef.child(id).remove().catch(() => {});
     } else if (a === 'del') {
       if (!confirm('이 글을 지울까요? 지운 글은 되살릴 수 없어요.')) return;
       await postsRef.child(id).remove();
@@ -276,8 +285,9 @@ $('loginBtn').onclick = () => {
 };
 $('logoutBtn').onclick = () => auth.signOut();
 auth.onAuthStateChanged(u => {
-  isAdmin = !!(u && u.email === ADMIN_EMAIL);
-  if (u && !isAdmin) { alert('선생님 계정이 아니에요.'); auth.signOut(); }
+  if (!u) { auth.signInAnonymously().catch(() => {}); }   // 학생은 자동으로 '이 기기' 표시를 받아요
+  isAdmin = !!(u && !u.isAnonymous && u.email === ADMIN_EMAIL);
+  if (u && !u.isAnonymous && !isAdmin) { alert('선생님 계정이 아니에요.'); auth.signOut(); }
   $('adminBar').classList.toggle('on', isAdmin);
   $('loginBtn').textContent = isAdmin ? '관리 중' : '선생님';
   $('name').placeholder = isAdmin ? '이름 (비우면 "선생님")' : '이름';
