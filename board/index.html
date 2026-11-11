@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자유게시판 · Master Hue의 작업실</title>
+<!-- 학생 글이 검색에 나오지 않게 -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#2EC4B6">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../style.css?v=2">
+<style>
+  .rules { background: #fff8e6; border-radius: 16px; padding: 14px 18px; font-size: 14px; color: #6b5300; margin-bottom: 18px; }
+  .rules b { color: #8a6400; }
+  .rules ul { margin: 6px 0 0 18px; }
+  .write { border: 1.5px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 22px; }
+  .write input, .write textarea {
+    width: 100%; font: inherit; font-size: 15px; border: 1.5px solid var(--line);
+    border-radius: 12px; padding: 10px 12px; outline: none; background: #fff;
+  }
+  .write input:focus, .write textarea:focus { border-color: var(--point); }
+  .write input { max-width: 220px; margin-bottom: 10px; }
+  .write textarea { min-height: 90px; resize: vertical; line-height: 1.6; }
+  .write-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px; }
+  .count { font-size: 13px; color: var(--sub); }
+  .btn { border: 0; background: var(--point); color: #fff; font: inherit; font-weight: 700; padding: 10px 22px; border-radius: 12px; cursor: pointer; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .msg { font-size: 14px; margin-top: 8px; min-height: 20px; }
+  .msg.err { color: #e03131; } .msg.ok { color: var(--point); }
+
+  .post { border: 1.5px solid var(--line); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; }
+  .post.pinned { border-color: var(--point); background: #f3fbfa; }
+  .post.teacher .who { color: var(--point); }
+  .post-head { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .who { font-weight: 700; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--point); color: #fff; }
+  .badge.pin { background: #fcc419; color: #5c4400; }
+  .when { color: var(--sub); font-size: 13px; margin-left: auto; }
+  .text { margin-top: 8px; white-space: pre-wrap; word-break: break-word; line-height: 1.65; }
+  .reply { margin-top: 10px; background: #e2f7f5; border-radius: 12px; padding: 10px 12px; font-size: 14px; white-space: pre-wrap; word-break: break-word; }
+  .reply b { color: var(--point); }
+  .hidden-note { color: var(--sub); font-size: 14px; margin-top: 8px; }
+  .acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; justify-content: flex-end; }
+  .acts button { border: 1.5px solid var(--line); background: #fff; font: inherit; font-size: 12px; font-weight: 600; color: var(--sub); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+  .acts button:hover { border-color: var(--point); color: var(--point); }
+  .acts button.danger:hover { border-color: #e03131; color: #e03131; }
+  .admin-bar { display: none; background: #f3fbfa; border-radius: 12px; padding: 10px 14px; font-size: 14px; margin-bottom: 14px; justify-content: space-between; align-items: center; }
+  .admin-bar.on { display: flex; }
+  .teacher-link { background: none; border: 0; font: inherit; font-size: 13px; color: var(--sub); cursor: pointer; }
+  .teacher-link:hover { color: var(--point); }
+  .top-right { display: flex; gap: 8px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="../"><img src="../fox.svg" alt=""> Hue's Lab</a>
+  <button class="qr-btn" id="qrBtn" aria-label="QR코드 보기">QR</button>
+</header>
+
+<main>
+  <section class="page-title">
+    <a class="back" href="../">← 처음으로</a>
+    <h1>💬 자유게시판</h1>
+    <p>궁금한 것, 하고 싶은 말을 자유롭게 남겨 주세요.</p>
+  </section>
+
+  <div class="rules">
+    <b>📌 게시판 약속</b>
+    <ul>
+      <li>욕설·비하하는 말은 쓰지 않아요. (자동으로 막혀요)</li>
+      <li>친구 이름을 들어 놀리거나 흉보는 글은 쓰지 않아요.</li>
+      <li>전화번호·주소 같은 개인정보는 올리지 않아요.</li>
+      <li>약속을 지키지 않은 글은 선생님이 지워요. 불편한 글은 <b>신고</b>를 눌러 주세요.</li>
+    </ul>
+  </div>
+
+  <div class="admin-bar" id="adminBar">
+    <span>👩‍🏫 선생님 관리 모드</span>
+    <button class="teacher-link" id="logoutBtn">로그아웃</button>
+  </div>
+
+  <section class="write">
+    <input id="name" maxlength="10" placeholder="이름" autocomplete="off">
+    <textarea id="text" maxlength="500" placeholder="여기에 글을 써 주세요 (500자까지)"></textarea>
+    <div class="write-foot">
+      <span class="count" id="count">0 / 500</span>
+      <button class="btn" id="sendBtn">올리기</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </section>
+
+  <div id="list"><p class="empty">글을 불러오는 중이에요…</p></div>
+</main>
+
+<footer>
+  <a href="../">Master Hue의 작업실</a>
+  <span>·</span>
+  <button class="teacher-link" id="loginBtn">선생님</button>
+</footer>
+
+<!-- QR 창 -->
+<div class="modal" id="qrModal" hidden>
+  <div class="modal-box">
+    <h3>휴대폰으로 스캔하세요</h3>
+    <div id="qr"></div>
+    <p class="url" id="qrUrl"></p>
+    <button id="qrClose">닫기</button>
+  </div>
+</div>
+
+<script src="../qr.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ---------- 설정 ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyCvi-oMFJ7HVTZt1jEIRRC-hISB1QxCKEk",
+  authDomain: "mole-game-f6eec.firebaseapp.com",
+  databaseURL: "https://mole-game-f6eec-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mole-game-f6eec",
+  appId: "1:23804963522:web:ecc7d09c6b52d2dbeea95b"
+};
+const ADMIN_EMAIL = "hue1220@gmail.com";   // 선생님 관리 계정
+const REPORT_LIMIT = 3;                    // 신고 3번이면 자동 숨김
+const WAIT_SEC = 60;                       // 도배 방지: 1분에 1개
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+const postsRef = db.ref('board/posts');
+const reportsRef = db.ref('board/reports');
+
+/* ---------- 작은 도구 ---------- */
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let myId = store.get('board_cid', null);
+if (!myId) { myId = 'c' + Math.random().toString(36).slice(2, 12); store.set('board_cid', myId); }
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function ago(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return '방금';
+  if (s < 3600) return Math.floor(s / 60) + '분 전';
+  if (s < 86400) return Math.floor(s / 3600) + '시간 전';
+  const d = new Date(ts);
+  return (d.getMonth() + 1) + '.' + String(d.getDate()).padStart(2, '0');
+}
+
+/* ---------- 욕설 걸러내기 ---------- */
+const BAD = ['시발','씨발','씨바','시바','씨빨','시빨','씨팔','시팔','ㅅㅂ','ㅆㅂ','ㅅ1ㅂ','병신','븅신','빙신','ㅂㅅ','좆','존나','졸라','존내','ㅈㄴ',
+  '개새끼','개새','개색','새끼','새키','색히','ㅅㄲ','미친놈','미친년','미친새','ㅁㅊ','지랄','ㅈㄹ','닥쳐','꺼져','엠창','느금','니애미','니미','느그',
+  '애미','애비','염병','등신','찐따','썅','씹새','씹할','씹년','씹놈','개년','개놈','개같','개씨','엿먹','fuck','shit','bitch','sibal','ssibal','tlqkf'];
+function hasBad(t) {
+  const clean = t.toLowerCase().replace(/[\s0-9.,!?~*\-_+=/\\|'"`^@#$%&(){}\[\]<>:;]/g, '');
+  return BAD.some(w => clean.includes(w));
+}
+/* ---------- 전화번호 가리기 ---------- */
+function maskPhone(t) {
+  return t.replace(/01[016789][\s.\-]?\d{3,4}[\s.\-]?\d{4}/g, '010-****-****');
+}
+
+/* ---------- 글자 수 ---------- */
+$('text').addEventListener('input', () => { $('count').textContent = $('text').value.length + ' / 500'; });
+$('name').value = store.get('board_name', '');
+
+function say(t, ok) { const m = $('msg'); m.textContent = t; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+
+/* ---------- 글 올리기 ---------- */
+let isAdmin = false;
+$('sendBtn').onclick = async () => {
+  let name = $('name').value.trim();
+  let text = $('text').value.trim();
+  if (isAdmin && !name) name = '선생님';
+  if (!name) return say('이름을 써 주세요.');
+  if (!text) return say('글 내용을 써 주세요.');
+  if (hasBad(name + text)) return say('바른 말로 다시 써 주세요. 🙂');
+  const last = store.get('board_last', 0);
+  const wait = WAIT_SEC - Math.floor((Date.now() - last) / 1000);
+  if (!isAdmin && wait > 0) return say(wait + '초 뒤에 다시 올릴 수 있어요.');
+
+  const masked = maskPhone(text);
+  const post = { name, text: masked, ts: firebase.database.ServerValue.TIMESTAMP };
+  if (isAdmin) post.teacher = true;
+  $('sendBtn').disabled = true;
+  try {
+    await postsRef.push(post);
+    store.set('board_last', Date.now());
+    store.set('board_name', isAdmin ? store.get('board_name', '') : name);
+    $('text').value = ''; $('count').textContent = '0 / 500';
+    say(masked !== text ? '올렸어요! 전화번호는 안전하게 가려서 올렸어요.' : '올렸어요!', true);
+  } catch (e) {
+    say('올리지 못했어요. 잠시 뒤에 다시 해 주세요.');
+  }
+  $('sendBtn').disabled = false;
+};
+
+/* ---------- 목록 보여 주기 ---------- */
+let posts = {}, reports = {};
+const myReports = new Set(store.get('board_reported', []));
+
+function render() {
+  const arr = Object.entries(posts).map(([id, p]) => ({ id, ...p }));
+  arr.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.ts || 0) - (a.ts || 0));
+  if (!arr.length) { $('list').innerHTML = '<p class="empty">아직 글이 없어요. 첫 글을 남겨 주세요!</p>'; return; }
+  $('list').innerHTML = arr.map(p => {
+    const rc = reports[p.id] ? Object.keys(reports[p.id]).length : 0;
+    const hidden = rc >= REPORT_LIMIT && !p.teacher;
+    const cls = ['post', p.pinned ? 'pinned' : '', p.teacher ? 'teacher' : ''].join(' ');
+    let body;
+    if (hidden && !isAdmin) body = '<p class="hidden-note">신고가 많아 선생님이 확인 중인 글이에요.</p>';
+    else body = (hidden ? '<p class="hidden-note">⚠️ 신고 ' + rc + '회 — 학생들에게는 숨겨져 있어요.</p>' : '') +
+      '<div class="text">' + esc(p.text) + '</div>' +
+      (p.reply ? '<div class="reply"><b>선생님 답글</b><br>' + esc(p.reply) + '</div>' : '');
+    let acts = '';
+    if (isAdmin) {
+      acts = '<button data-a="reply" data-id="' + p.id + '">' + (p.reply ? '답글 고치기' : '답글') + '</button>' +
+        '<button data-a="pin" data-id="' + p.id + '">' + (p.pinned ? '고정 해제' : '맨 위 고정') + '</button>' +
+        (rc ? '<button data-a="clear" data-id="' + p.id + '">신고 초기화</button>' : '') +
+        '<button class="danger" data-a="del" data-id="' + p.id + '">삭제</button>';
+    } else if (!hidden && !p.teacher && !myReports.has(p.id)) {
+      acts = '<button data-a="report" data-id="' + p.id + '">🚩 신고</button>';
+    }
+    return '<article class="' + cls + '"><div class="post-head">' +
+      '<span class="who">' + esc(p.name) + '</span>' +
+      (p.teacher ? '<span class="badge">선생님</span>' : '') +
+      (p.pinned ? '<span class="badge pin">📌 고정</span>' : '') +
+      '<span class="when">' + (p.ts ? ago(p.ts) : '') + '</span></div>' +
+      body + (acts ? '<div class="acts">' + acts + '</div>' : '') + '</article>';
+  }).join('');
+}
+
+postsRef.orderByChild('ts').limitToLast(150).on('value', s => { posts = s.val() || {}; render(); },
+  () => { $('list').innerHTML = '<p class="empty">글을 불러오지 못했어요. 새로고침해 주세요.</p>'; });
+reportsRef.on('value', s => { reports = s.val() || {}; render(); });
+setInterval(render, 60000);
+
+/* ---------- 버튼 동작 ---------- */
+$('list').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-a]'); if (!b) return;
+  const id = b.dataset.id, a = b.dataset.a, p = posts[id];
+  try {
+    if (a === 'report') {
+      if (!confirm('이 글을 신고할까요? 신고가 ' + REPORT_LIMIT + '번 쌓이면 글이 숨겨져요.')) return;
+      await reportsRef.child(id).child(myId).set(true);
+      myReports.add(id); store.set('board_reported', [...myReports]); render();
+    } else if (a === 'del') {
+      if (!confirm('이 글을 지울까요? 지운 글은 되살릴 수 없어요.')) return;
+      await postsRef.child(id).remove();
+      await reportsRef.child(id).remove();
+    } else if (a === 'pin') {
+      await postsRef.child(id).child('pinned').set(p.pinned ? null : true);
+    } else if (a === 'clear') {
+      await reportsRef.child(id).remove();
+    } else if (a === 'reply') {
+      const r = prompt('답글을 써 주세요. (비우면 답글 삭제)', p.reply || '');
+      if (r === null) return;
+      await postsRef.child(id).child('reply').set(r.trim() ? r.trim().slice(0, 500) : null);
+    }
+  } catch (err) { alert('처리하지 못했어요. 다시 해 주세요.'); }
+});
+
+/* ---------- 선생님 로그인 ---------- */
+$('loginBtn').onclick = () => {
+  if (isAdmin) return;
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(() => alert('로그인하지 못했어요.'));
+};
+$('logoutBtn').onclick = () => auth.signOut();
+auth.onAuthStateChanged(u => {
+  isAdmin = !!(u && u.email === ADMIN_EMAIL);
+  if (u && !isAdmin) { alert('선생님 계정이 아니에요.'); auth.signOut(); }
+  $('adminBar').classList.toggle('on', isAdmin);
+  $('loginBtn').textContent = isAdmin ? '관리 중' : '선생님';
+  $('name').placeholder = isAdmin ? '이름 (비우면 "선생님")' : '이름';
+  render();
+});
+
+/* ---------- QR ---------- */
+const modal = $('qrModal');
+const url = location.href.split('#')[0].split('?')[0].replace(/index\.html$/, '');
+let made = false;
+$('qrBtn').onclick = () => {
+  if (!made && window.qrcode) {
+    const q = qrcode(0, 'M'); q.addData(url); q.make();
+    $('qr').innerHTML = q.createSvgTag({ cellSize: 6, margin: 2 });
+    made = true;
+  }
+  $('qrUrl').textContent = url;
+  modal.hidden = false;
+};
+$('qrClose').onclick = () => modal.hidden = true;
+modal.onclick = e => { if (e.target === modal) modal.hidden = true; };
+</script>
+</body>
+</html>
