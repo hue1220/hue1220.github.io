@@ -59,7 +59,7 @@ document.querySelectorAll('a.pdf').forEach(a=>a.addEventListener('click',async e
       try{ await navigator.share({files:[f]}); toast('파일 앱에 저장했다면 → 파일 앱 > 나의 iPhone(iPad)에서 확인'); return; }
       catch(err){ if(err && err.name==='AbortError') return; }
     }
-    toast('PDF가 열리면 아래 공유 버튼 → [파일에 저장]을 누르세요'); setTimeout(()=>location.href=h,1200); return;
+    toast('PDF가 열리면 아래 공유 버튼 → [파일에 저장]을 누르세요'); setTimeout(()=>window.open(h,'_blank'),1200); return;
   }
   toast('내려받는 중…');
   try{
@@ -68,7 +68,7 @@ document.querySelectorAll('a.pdf').forEach(a=>a.addEventListener('click',async e
     const u=URL.createObjectURL(b); const x=document.createElement('a'); x.href=u; x.download=name;
     document.body.appendChild(x); x.click(); x.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000);
     toast('저장 완료 → 내 파일(또는 다운로드) 폴더에서 확인');
-  }catch(_){ location.href=h; }
+  }catch(_){ window.open(h,'_blank'); }
 }));
 document.querySelectorAll('[data-open]').forEach(a=>{
   const t=new Date(a.dataset.open);
