@@ -1,5 +1,9 @@
 [
   { "group": "AI 토킹모임", "title": "2회 자동 인쇄 키트 (학교 PC 설치용)", "file": "files/AutoPrint-kit.zip", "date": "2026-11-22" },
   { "group": "AI 토킹모임", "title": "2회 GitHub와 스케줄러로 클릭 없이 자동 인쇄 (PDF)", "file": "files/aitalk2-github-autoprint.pdf", "date": "2026-11-22" },
-  { "group": "AI 토킹모임", "title": "2회 GitHub와 스케줄러로 클릭 없이 자동 인쇄 (PPT)", "file": "files/aitalk2-github-autoprint.pptx", "date": "2026-11-22" }
+  { "group": "AI 토킹모임", "title": "2회 GitHub와 스케줄러로 클릭 없이 자동 인쇄 (PPT)", "file": "files/aitalk2-github-autoprint.pptx", "date": "2026-11-22" },
+  { "group": "AI 토킹모임", "title": "2.5회 스킬 유인물 (한글)", "file": "files/aitalk25-handout.hwpx", "date": "2026-11-22" },
+  { "group": "AI 토킹모임", "title": "2.5회 스킬 유인물 (PDF)", "file": "files/aitalk25-handout.pdf", "date": "2026-11-22" },
+  { "group": "AI 토킹모임", "title": "2.5회 스킬, AI에게 주는 업무 매뉴얼 (PDF)", "file": "files/aitalk25-skill.pdf", "date": "2026-11-22" },
+  { "group": "AI 토킹모임", "title": "2.5회 스킬, AI에게 주는 업무 매뉴얼 (PPT)", "file": "files/aitalk25-skill.pptx", "date": "2026-11-22" }
 ]
