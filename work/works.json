@@ -1,4 +1,5 @@
 [
-  { "group": "AI 토킹모임", "title": "2회 과제 2 - 점심 뉴스 브리핑 자동 출력 (PPT)", "file": "files/aitalk2-news-print.pptx", "date": "2026-11-22" },
-  { "group": "AI 토킹모임", "title": "2회 과제 2 - 점심 뉴스 브리핑 자동 출력 (PDF)", "file": "files/aitalk2-news-print.pdf", "date": "2026-11-22" }
+  { "group": "AI 토킹모임", "title": "2회 자동 인쇄 키트 (학교 PC 설치용)", "file": "files/AutoPrint-kit.zip", "date": "2026-11-22" },
+  { "group": "AI 토킹모임", "title": "2회 GitHub와 스케줄러로 클릭 없이 자동 인쇄 (PDF)", "file": "files/aitalk2-github-autoprint.pdf", "date": "2026-11-22" },
+  { "group": "AI 토킹모임", "title": "2회 GitHub와 스케줄러로 클릭 없이 자동 인쇄 (PPT)", "file": "files/aitalk2-github-autoprint.pptx", "date": "2026-11-22" }
 ]
